@@ -73,42 +73,39 @@ class Company {
 
   static async findFiltered(filters) {
 
-    const { setCols, values } = sqlForPartialUpdate(
-      filters,
-      {
-        name: "name",
-        minEmployees: "minEmployees",
-        maxEmployees: "maxEmployees"
-      });
+    const whereQueries = [];
+    const values = [];
 
-      console.log('setCols ---------->', setCols);
-      console.log('setCols type---> ',typeof setCols)
-      console.log('values ----------->', values);
+    if (filters.minEmployees > filters.maxEmployees) {
+      throw new BadRequestError();
+    }
 
-      const where = [];
     if (filters.name) {
-      where.push(`name ILIKE %${filters.name}%`)
+      values.push(`%${filters.name}%`);
+      whereQueries.push(`name ILIKE $${values.length}`);
     }
     if (filters.maxEmployees) {
-      where.push(`num_employees BETWEEN ${filters.minEmployees || 0} AND ${filters.maxEmployees}`)
-    } else if (filters.minEmployees && !filters.maxEmployees) {
-      where.push(`num_employees >= $${$2}`)
+      values.push(filters.maxEmployees);
+      whereQueries.push(`num_employees <= $${values.length}`);
     }
 
-    const whereQuery = where.join(' AND ')
-    console.log('whereQuery -------------->', whereQuery)
+    if (filters.minEmployees) {
+      values.push(filters.minEmployees);
+      whereQueries.push(`num_employees >= $${values.length}`);
+    }
 
-    const querySql = `
-      SELECT handle,
+    const whereStatement = whereQueries.join(' AND ');
+    const companiesRes = await db.query(
+      ` SELECT handle,
         name,
         description,
         num_employees AS "numEmployees",
         logo_url AS "logoUrl"
       FROM companies
-      WHERE ${whereQuery}
-      ORDER BY name`;
+      WHERE ${whereStatement}
+      ORDER BY name`, values);
 
-    //return companiesRes.rows;
+    return companiesRes.rows;
   }
 
   /** Given a company handle, return data about company.
