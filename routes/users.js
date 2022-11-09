@@ -81,6 +81,7 @@ router.get("/:username", ensureLoggedIn, async function (req, res, next) {
  **/
 
 router.patch("/:username", ensureLoggedIn, async function (req, res, next) {
+
   const validator = jsonschema.validate(
     req.body,
     userUpdateSchema,
@@ -92,6 +93,7 @@ router.patch("/:username", ensureLoggedIn, async function (req, res, next) {
   }
 
   const user = await User.update(req.params.username, req.body);
+  console.log("req.body -------------->", req.body)
   return res.json({ user });
 });
 

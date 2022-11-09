@@ -112,6 +112,7 @@ class Company {
           logoUrl: "logo_url",
         });
     const handleVarIdx = "$" + (values.length + 1);
+    console.log(sqlForPartialUpdate)
 
     const querySql = `
       UPDATE companies
