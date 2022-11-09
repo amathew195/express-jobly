@@ -19,6 +19,6 @@ describe("sqlForPartialUpdate", function () {
     const jsToSql = { firstName: 'first_name', lastName: 'last_name' };
 
     expect(() => { sqlForPartialUpdate(dataToUpdate, jsToSql); })
-      .toThrow(BadRequestError);
+      .toThrow(new BadRequestError('No data'));
   });
 });
