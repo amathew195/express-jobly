@@ -3,12 +3,16 @@ const { BadRequestError } = require("../expressError");
 /** Converts raw patch data to parameterized sql query inputs
  *
  * Accepts 2 Arguments:
- *  1.) body data of a patch request - Ex: {firstName: 'Aliya', age: 32}
- *  2.) a schema for converting - Ex: {firstName: 'first_name'}
- * model variable names to SQL field names.
+ *  1.) body data of a patch request
+ *    - Ex: { firstName:'Aliya',lastName:'Sanders'}
+ *  2.) a schema for converting model variable names to SQL field names.
+ *    - Ex: {firstName:'first_name', lastName:'last_name'}
  *
  * Returns the parameterized query version of the data for the SQL query.
- * Ex: { setCols: '"first_name"=$1', values: ['Aliya']}
+ *      Ex: {
+            setCols: '"first_name"=$1, "last_name"=$2',
+            values: ['Aliya', 'Sanders']
+          }
  */
 
 function sqlForPartialUpdate(dataToUpdate, jsToSql) {
