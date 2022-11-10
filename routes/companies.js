@@ -6,12 +6,12 @@ const jsonschema = require("jsonschema");
 const express = require("express");
 
 const { BadRequestError } = require("../expressError");
-const { ensureLoggedIn } = require("../middleware/auth");
+const { ensureLoggedIn, ensureIsAdmin } = require("../middleware/auth");
 const Company = require("../models/company");
 
 const companyNewSchema = require("../schemas/companyNew.json");
 const companyUpdateSchema = require("../schemas/companyUpdate.json");
-const companyFilterSchema = require("../schemas/companyFilter.json")
+const companyFilterSchema = require("../schemas/companyFilter.json");
 
 const router = new express.Router();
 
@@ -22,14 +22,14 @@ const router = new express.Router();
  *
  * Returns { handle, name, description, numEmployees, logoUrl }
  *
- * Authorization required: login
+ * Authorization required: must be logged in and an admin
  */
 
-router.post("/", ensureLoggedIn, async function (req, res, next) {
+router.post("/", ensureIsAdmin, async function (req, res, next) {
   const validator = jsonschema.validate(
     req.body,
     companyNewSchema,
-    {required: true}
+    { required: true }
   );
   if (!validator.valid) {
     const errs = validator.errors.map(e => e.stack);
@@ -59,19 +59,20 @@ router.get("/", async function (req, res, next) {
   if (Object.keys(filters).length === 0) {
     companies = await Company.findAll();
   } else {
-    // Convert stringified nums to nums
-    for (const filter in filters) {
-      if (filters[filter] === "0" || Number(filters[filter])) {
-        //TODO: Use isNAN(), apply only to min & max fields, no loop
-
-        filters[filter] = Number(filters[filter]);
-      }
+    // Convert stringified nums to nums for maxEmployees and minEmployees
+    if (!isNaN(Number(filters.maxEmployees))) {
+      filters.maxEmployees = Number(filters.maxEmployees);
     }
+
+    if (!isNaN(Number(filters.minEmployees))) {
+      filters.minEmployees = Number(filters.minEmployees);
+    }
+
     // Validate query strings against schema
     const validator = jsonschema.validate(
       filters,
       companyFilterSchema,
-      {required:true}
+      { required: true }
     );
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);
@@ -108,14 +109,14 @@ router.get("/:handle", async function (req, res, next) {
  *
  * Returns { handle, name, description, numEmployees, logo_url }
  *
- * Authorization required: login
+ * Authorization required: must be logged in and an admin
  */
 
-router.patch("/:handle", ensureLoggedIn, async function (req, res, next) {
+router.patch("/:handle", ensureIsAdmin, async function (req, res, next) {
   const validator = jsonschema.validate(
     req.body,
     companyUpdateSchema,
-    {required:true}
+    { required: true }
   );
   if (!validator.valid) {
     const errs = validator.errors.map(e => e.stack);
@@ -128,10 +129,10 @@ router.patch("/:handle", ensureLoggedIn, async function (req, res, next) {
 
 /** DELETE /[handle]  =>  { deleted: handle }
  *
- * Authorization: login
+ * Authorization: must be logged in and an admin
  */
 
-router.delete("/:handle", ensureLoggedIn, async function (req, res, next) {
+router.delete("/:handle", ensureIsAdmin, async function (req, res, next) {
   await Company.remove(req.params.handle);
   return res.json({ deleted: req.params.handle });
 });
