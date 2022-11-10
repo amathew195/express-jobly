@@ -77,7 +77,7 @@ class Company {
     const values = [];
 
     if (filters.minEmployees > filters.maxEmployees) {
-      throw new BadRequestError();
+      throw new BadRequestError("Max employees must be more than Min employees");
     }
 
     if (filters.name) {

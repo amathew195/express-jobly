@@ -87,6 +87,65 @@ describe("findAll", function () {
   });
 });
 
+/************************************** findFiltered */
+
+describe("findFiltered", function () {
+  test("works: with name and maxEmployees filters", async function () {
+    let companies = await Company.findFiltered({
+      name: 'C1',
+      maxEmployees: 3
+    });
+
+    expect(companies).toEqual([
+      {
+        handle: "c1",
+        name: "C1",
+        description: "Desc1",
+        numEmployees: 1,
+        logoUrl: "http://c1.img",
+      }
+    ]);
+  });
+
+  test("works: with max and min Employee filters", async function () {
+    let companies = await Company.findFiltered({
+      minEmployees: 2,
+      maxEmployees: 3
+    });
+
+    expect(companies).toEqual([
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+      {
+        handle: "c3",
+        name: "C3",
+        description: "Desc3",
+        numEmployees: 3,
+        logoUrl: "http://c3.img",
+      }
+    ]);
+  });
+
+  test("invalid filters, maxEmployee < minEmployee", async function () {
+    const filters = {
+      minEmployees: 20,
+      maxEmployees: 10
+    };
+
+    try {
+      await Company.findFiltered(filters);
+      throw new Error("fail test, you shouldn't get here");
+    } catch (err) {
+      expect(err instanceof BadRequestError).toBeTruthy();
+    }
+  });
+});
+
 /************************************** get */
 
 describe("get", function () {
