@@ -17,8 +17,6 @@ class Job {
 
    static async create({ title, salary, equity, companyHandle }) {
 
-    console.log("We got into the method...........")
-
     const result = await db.query(
       `INSERT INTO jobs(
         title,
@@ -40,8 +38,47 @@ class Job {
     return job;
   }
 
+  /** Find all jobs.
+   *
+   * Returns [{ id, title, salary, equity, company_handle }, ...]
+   * */
 
+   static async findAll() {
+    const jobsRes = await db.query(
+      `SELECT id,
+              title,
+              salary,
+              equity,
+              company_handle AS "companyHandle"
+           FROM jobs
+           ORDER BY id`);
+    return jobsRes.rows;
+  }
 
+  /** Given a job id, return data about job.
+   *
+   * Returns { id, title, salary, equity, company_handle }
+   *
+   * Throws NotFoundError if not found.
+   **/
+
+   static async get(id) {
+    const jobRes = await db.query(
+      `SELECT id,
+              title,
+              salary,
+              equity,
+              company_handle AS "companyHandle"
+           FROM jobs
+           WHERE id = $1`,
+      [id]);
+
+    const job = jobRes.rows[0];
+    console.log(job, "<<<<<<<<<<<job")
+    if (!job) throw new NotFoundError(`No job: ${id}`);
+
+    return job;
+  }
 
 
 }
