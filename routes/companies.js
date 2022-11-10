@@ -62,6 +62,7 @@ router.get("/", async function (req, res, next) {
     // Convert stringified nums to nums
     for (const filter in filters) {
       if (filters[filter] === "0" || Number(filters[filter])) {
+        //TODO: Use isNAN(), apply only to min & max fields, no loop
 
         filters[filter] = Number(filters[filter]);
       }
@@ -69,7 +70,8 @@ router.get("/", async function (req, res, next) {
     // Validate query strings against schema
     const validator = jsonschema.validate(
       filters,
-      companyFilterSchema
+      companyFilterSchema,
+      {required:true}
     );
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);

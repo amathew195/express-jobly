@@ -108,6 +108,69 @@ describe("GET /companies", function () {
   });
 });
 
+/***************************************GET /companies FILTERED */
+
+describe("GET /companies FILTERED", function () {
+
+  test("working with name filter passed in", async function () {
+    const resp = await request(app)
+      .get("/companies")
+      .query({name: 'C1'});
+
+    expect(resp.body).toEqual({
+        companies:
+            [
+              {
+                handle: "c1",
+                name: "C1",
+                description: "Desc1",
+                numEmployees: 1,
+                logoUrl: "http://c1.img",
+              }
+            ],
+      })
+  });
+
+  test("working with min/max filter passed in", async function () {
+    const resp = await request(app)
+      .get("/companies")
+      .query({
+        minEmployees: 2,
+        maxEmployees: 3});
+
+    expect(resp.body).toEqual({
+        companies:
+            [
+              {
+                handle: "c2",
+                name: "C2",
+                description: "Desc2",
+                numEmployees: 2,
+                logoUrl: "http://c2.img",
+              },
+              {
+                handle: "c3",
+                name: "C3",
+                description: "Desc3",
+                numEmployees: 3,
+                logoUrl: "http://c3.img",
+              }
+            ],
+      })
+  });
+
+  test("throws error if maxEmployees is 0", async function () {
+    const resp = await request(app)
+      .get("/companies")
+      .query({ maxEmployees: 0});
+
+      expect(resp.statusCode).toEqual(400);
+  });
+
+
+});
+
+
 /************************************** GET /companies/:handle */
 
 describe("GET /companies/:handle", function () {

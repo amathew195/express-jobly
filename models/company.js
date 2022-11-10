@@ -108,6 +108,8 @@ class Company {
     return companiesRes.rows;
   }
 
+  //TODO: Break the where clause generation into helper function, test separately
+  
   /** Given a company handle, return data about company.
    *
    * Returns { handle, name, description, numEmployees, logoUrl, jobs }

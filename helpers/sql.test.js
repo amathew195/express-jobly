@@ -6,10 +6,11 @@ const { BadRequestError } = require("../expressError");
 describe("sqlForPartialUpdate", function () {
   test("works", function () {
     const dataToUpdate = { firstName: 'Aliya', lastName: 'Sanders' };
-    const jsToSql = { firstName: 'first_name', lastName: 'last_name' };
+    const jsToSql = { firstName: 'first_name' };
     const result = sqlForPartialUpdate(dataToUpdate, jsToSql);
+
     expect(result).toEqual({
-      setCols: '"first_name"=$1, "last_name"=$2',
+      setCols: '"first_name"=$1, "lastName"=$2',
       values: ['Aliya', 'Sanders']
     });
   });
