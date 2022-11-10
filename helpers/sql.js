@@ -32,8 +32,4 @@ function sqlForPartialUpdate(dataToUpdate, jsToSql) {
 }
 
 
-function sqlForFiltering(dataToUpdate, jsToSql) {
-
-}
-
 module.exports = { sqlForPartialUpdate };

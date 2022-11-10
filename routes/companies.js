@@ -11,6 +11,7 @@ const Company = require("../models/company");
 
 const companyNewSchema = require("../schemas/companyNew.json");
 const companyUpdateSchema = require("../schemas/companyUpdate.json");
+const companyFilterSchema = require("../schemas/companyFilter.json")
 
 const router = new express.Router();
 
@@ -53,13 +54,36 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
 router.get("/", async function (req, res, next) {
   const filters = req.query;
   let companies;
+
+  // if no query strings are passed in, call findAll()
   if (Object.keys(filters).length === 0) {
     companies = await Company.findAll();
   } else {
+    // Convert stringified nums to nums
+    for (const filter in filters) {
+      if (filters[filter] === "0" || Number(filters[filter])) {
+
+        filters[filter] = Number(filters[filter]);
+      }
+    }
+    // Validate query strings against schema
+    const validator = jsonschema.validate(
+      filters,
+      companyFilterSchema
+    );
+    if (!validator.valid) {
+      const errs = validator.errors.map(e => e.stack);
+      throw new BadRequestError(errs);
+    }
+
+    // pass in query object to findFiltered()
     companies = await Company.findFiltered(filters);
   }
+
   return res.json({ companies });
+
 });
+
 
 /** GET /[handle]  =>  { company }
  *
