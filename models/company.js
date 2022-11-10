@@ -65,7 +65,7 @@ class Company {
            ORDER BY name`);
     return companiesRes.rows;
   }
-
+  //TODO: Document the expectation is that filters MUST be passed in
   /** Find specific companies based on input object of filters.
  *  Param is object with possible keys {name, minEmployees, maxEmployees}
  * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
