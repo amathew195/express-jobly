@@ -159,10 +159,10 @@ describe("GET /companies FILTERED", function () {
       })
   });
 
-  test("throws error if maxEmployees is 0", async function () {
+  test("throws error if maxEmployees is 'abc", async function () {
     const resp = await request(app)
       .get("/companies")
-      .query({ maxEmployees: 0});
+      .query({ maxEmployees: 'abc'});
 
       expect(resp.statusCode).toEqual(400);
   });
