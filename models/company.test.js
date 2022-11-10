@@ -146,6 +146,20 @@ describe("findFiltered", function () {
   });
 });
 
+/************************************** _whereClauseGenerator */
+
+describe("_whereClauseGenerator", function () {
+  test("works: with name and maxEmployees filters", function () {
+    let results = Company._whereClauseGenerator({
+      name: 'C1',
+      maxEmployees: 3
+    });
+    expect(results.whereStatement).toEqual(`name ILIKE $1 AND num_employees <= $2`);
+    expect(results.values).toEqual(['%C1%', 3])
+  });
+})
+
+
 /************************************** get */
 
 describe("get", function () {

@@ -65,13 +65,31 @@ class Company {
            ORDER BY name`);
     return companiesRes.rows;
   }
-  //TODO: Document the expectation is that filters MUST be passed in
-  /** Find specific companies based on input object of filters.
+
+  /** Function MUST be passed filters object.
+  * Finds specific companies based on input object of filters.
  *  Param is object with possible keys {name, minEmployees, maxEmployees}
  * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
  * */
 
   static async findFiltered(filters) {
+
+    const {whereStatement, values} = Company._whereClauseGenerator(filters)
+
+    const companiesRes = await db.query(
+      ` SELECT handle,
+        name,
+        description,
+        num_employees AS "numEmployees",
+        logo_url AS "logoUrl"
+      FROM companies
+      WHERE ${whereStatement}
+      ORDER BY name`, values);
+
+    return companiesRes.rows;
+  }
+
+  static _whereClauseGenerator(filters){
 
     const whereQueries = [];
     const values = [];
@@ -95,21 +113,11 @@ class Company {
     }
 
     const whereStatement = whereQueries.join(' AND ');
-    const companiesRes = await db.query(
-      ` SELECT handle,
-        name,
-        description,
-        num_employees AS "numEmployees",
-        logo_url AS "logoUrl"
-      FROM companies
-      WHERE ${whereStatement}
-      ORDER BY name`, values);
 
-    return companiesRes.rows;
+    return {whereStatement, values};
+
   }
 
-  //TODO: Break the where clause generation into helper function, test separately
-  
   /** Given a company handle, return data about company.
    *
    * Returns { handle, name, description, numEmployees, logoUrl, jobs }
