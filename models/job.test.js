@@ -121,6 +121,82 @@ describe("get", function () {
 
 /******************************************* Update a Job */
 
+describe("update", function () {
+  const updateData = {
+    title: "J1Updated",
+    salary: 100000,
+    equity: 0.06,
+  };
+
+  test("works", async function () {
+    let job = await Job.update(1, updateData);
+    expect(job).toEqual({
+      id: 1,
+      title: "J1Updated",
+      salary: 100000,
+      equity: "0.06",
+      companyHandle: "c1"
+    });
+
+    const result = await db.query(
+        `SELECT id, title, salary, equity, company_handle AS "companyHandle"
+        FROM jobs
+        WHERE id = 1`);
+    expect(result.rows).toEqual([{
+        id: 1,
+        title: "J1Updated",
+        salary: 100000,
+        equity: "0.06",
+        companyHandle: 'c1'
+    }]);
+  });
+
+  test("works: null fields", async function () {
+    const updateDataSetNulls = {
+      salary: null,
+      equity: null,
+    };
+
+    let job = await Job.update(2, updateDataSetNulls);
+    expect(job).toEqual({
+      id: 2,
+      title: "j2",
+      companyHandle: "c1",
+      ...updateDataSetNulls,
+    });
+
+    const result = await db.query(
+      `SELECT id, title, salary, equity, company_handle AS "companyHandle"
+           FROM jobs
+           WHERE id = 2`);
+    expect(result.rows).toEqual([{
+        id: 2,
+        title: 'j2',
+        salary: null,
+        equity: null,
+        companyHandle: 'c1'
+      }]);
+  });
+
+  test("not found if no such job", async function () {
+    try {
+      await Job.update(0, updateData);
+      throw new Error("fail test, you shouldn't get here");
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+
+  test("bad request with no data", async function () {
+    try {
+      await Job.update(1, {});
+      throw new Error("fail test, you shouldn't get here");
+    } catch (err) {
+      expect(err instanceof BadRequestError).toBeTruthy();
+    }
+  });
+});
+
 
 /******************************************* Delete a Job */
 
