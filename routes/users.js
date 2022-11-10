@@ -61,7 +61,7 @@ router.get("/", ensureIsAdmin, async function (req, res, next) {
  *
  * Returns { username, firstName, lastName, isAdmin }
  *
- * Authorization required: login
+ * Authorization required: logged as admin or same user
  **/
 
 router.get("/:username", ensureIsCorrectUserOrAdmin, async function (req, res, next) {
@@ -77,7 +77,7 @@ router.get("/:username", ensureIsCorrectUserOrAdmin, async function (req, res, n
  *
  * Returns { username, firstName, lastName, email, isAdmin }
  *
- * Authorization required: login
+ * Authorization required: logged as admin or same user
  **/
 
 router.patch("/:username", ensureIsCorrectUserOrAdmin, async function (req, res, next) {
@@ -99,7 +99,7 @@ router.patch("/:username", ensureIsCorrectUserOrAdmin, async function (req, res,
 
 /** DELETE /[username]  =>  { deleted: username }
  *
- * Authorization required: login
+ * Authorization required: logged as admin or same user
  **/
 
 router.delete("/:username", ensureIsCorrectUserOrAdmin, async function (req, res, next) {

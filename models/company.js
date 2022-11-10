@@ -74,7 +74,7 @@ class Company {
 
   static async findFiltered(filters) {
 
-    const {whereStatement, values} = Company._whereClauseGenerator(filters)
+    const { whereStatement, values } = Company._whereClauseGenerator(filters);
 
     const companiesRes = await db.query(
       ` SELECT handle,
@@ -89,7 +89,15 @@ class Company {
     return companiesRes.rows;
   }
 
-  static _whereClauseGenerator(filters){
+  /** Given a filters object, return an object containing the WHERE clause
+   * and filter values. This is a helper function for findFiltered.
+   *
+   * Returns { whereStatement, values }
+   *   where whereStatement is a string (ex. "name ILIKE ....")
+   *   values is an array containing filter values (ex. ["garner", 500])
+   **/
+
+  static _whereClauseGenerator(filters) {
 
     const whereQueries = [];
     const values = [];
@@ -114,7 +122,7 @@ class Company {
 
     const whereStatement = whereQueries.join(' AND ');
 
-    return {whereStatement, values};
+    return { whereStatement, values };
 
   }
 
