@@ -157,7 +157,7 @@ class Company {
               j.salary,
               j.equity
         FROM companies AS c
-        FULL OUTER JOIN jobs AS j ON j.company_handle = c.handle
+        JOIN jobs AS j ON j.company_handle = c.handle
         WHERE c.handle = $1`,
         [handle]);
 

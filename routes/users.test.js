@@ -196,7 +196,7 @@ describe("GET /users", function () {
 /************************************** GET /users/:username */
 
 describe("GET /users/:username", function () {
-  test("works for admins", async function () {
+  test("works for admins, no jobs", async function () {
     const resp = await request(app)
       .get(`/users/u1`)
       .set("authorization", `Bearer ${adminToken}`);
@@ -207,6 +207,23 @@ describe("GET /users/:username", function () {
         lastName: "U1L",
         email: "user1@user.com",
         isAdmin: false,
+        jobs: [],
+      },
+    });
+  });
+
+  test("works for admins, w/jobs", async function () {
+    const resp = await request(app)
+      .get(`/users/u2`)
+      .set("authorization", `Bearer ${adminToken}`);
+    expect(resp.body).toEqual({
+      user: {
+        username: "u2",
+        firstName: "U2F",
+        lastName: "U2L",
+        email: "user2@user.com",
+        isAdmin: false,
+        jobs: [2],
       },
     });
   });
@@ -222,6 +239,7 @@ describe("GET /users/:username", function () {
         lastName: "U1L",
         email: "user1@user.com",
         isAdmin: false,
+        jobs: [],
       },
     });
   });
@@ -443,7 +461,7 @@ describe("POST /users/:username/jobs/:id", function () {
     expect(resp.statusCode).toEqual(404);
   });
 
-
+  //TODO: NOT AUTHORIZED AND JOB DOESN'T EXIST TEST
 
 });
 

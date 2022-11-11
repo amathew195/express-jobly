@@ -119,7 +119,7 @@ class User {
   /** Given a username, return data about user.
    *
    * Returns { username, first_name, last_name, is_admin, jobs }
-   *   where jobs is { id, title, company_handle, company_name, state }
+   *   where jobs is [ jobId, jobId, ... ]
    *
    * Throws NotFoundError if user not found.
    **/
@@ -139,6 +139,17 @@ class User {
     const user = userRes.rows[0];
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
+
+    const jobRes = await db.query(
+      `SELECT a.job_id AS "jobId"
+           FROM applications AS a
+           JOIN users as u
+            ON u.username = a.username
+           WHERE u.username = $1`,
+      [username],
+    )
+
+    user.jobs = jobRes.rows.map(j => j.jobId)
 
     return user;
   }
@@ -207,6 +218,7 @@ class User {
   }
 
   /** add new application to database; returns application */
+  // TODO: ADD WHAT IT ACCEPTS AND RETURNS
 
   static async apply({username, id}) {
 

@@ -62,14 +62,14 @@ describe("create", function () {
 
     try {
       await Job.create({
-      title: "new job",
-      salary: 90000,
-      equity: 0.05,
-      companyHandle: 'c0'
+        title: "new job",
+        salary: 90000,
+        equity: 0.05,
+        companyHandle: "c0"
       });
       throw new Error("fail test, you shouldn't get here");
     } catch (err) {
-      expect(err.code).toEqual('23503');
+      expect(err.detail).toEqual(`Key (company_handle)=(c0) is not present in table "companies".`);
     }
   });
 });
@@ -161,7 +161,7 @@ describe("_whereClauseGenerator", function () {
       hasEquity: true
     });
     expect(results.whereStatement).toEqual(`title ILIKE $1 AND equity > 0.0`);
-    expect(results.values).toEqual(["%j1%"])
+    expect(results.values).toEqual(["%j1%"]);
   });
 
   test("works: with title and minSalary filters", function () {
@@ -170,7 +170,7 @@ describe("_whereClauseGenerator", function () {
       minSalary: 50000,
     });
     expect(results.whereStatement).toEqual(`title ILIKE $1 AND salary >= $2`);
-    expect(results.values).toEqual(["%j1%", 50000])
+    expect(results.values).toEqual(["%j1%", 50000]);
   });
 
   test("works: with minSalary filters", function () {
@@ -178,7 +178,7 @@ describe("_whereClauseGenerator", function () {
       minSalary: 50000,
     });
     expect(results.whereStatement).toEqual(`salary >= $1`);
-    expect(results.values).toEqual([50000])
+    expect(results.values).toEqual([50000]);
   });
 
   test("works: with minSalary 0", function () {
@@ -186,9 +186,9 @@ describe("_whereClauseGenerator", function () {
       minSalary: 0,
     });
     expect(results.whereStatement).toEqual(`salary >= $1`);
-    expect(results.values).toEqual([0])
+    expect(results.values).toEqual([0]);
   });
-})
+});
 
 
 /******************************************* Update a Job */
@@ -211,15 +211,15 @@ describe("update", function () {
     });
 
     const result = await db.query(
-        `SELECT id, title, salary, equity, company_handle AS "companyHandle"
+      `SELECT id, title, salary, equity, company_handle AS "companyHandle"
         FROM jobs
         WHERE id = 1`);
     expect(result.rows).toEqual([{
-        id: 1,
-        title: "J1Updated",
-        salary: 100000,
-        equity: "0.06",
-        companyHandle: 'c1'
+      id: 1,
+      title: "J1Updated",
+      salary: 100000,
+      equity: "0.06",
+      companyHandle: 'c1'
     }]);
   });
 
@@ -242,12 +242,12 @@ describe("update", function () {
            FROM jobs
            WHERE id = 2`);
     expect(result.rows).toEqual([{
-        id: 2,
-        title: 'j2',
-        salary: null,
-        equity: null,
-        companyHandle: 'c1'
-      }]);
+      id: 2,
+      title: 'j2',
+      salary: null,
+      equity: null,
+      companyHandle: 'c1'
+    }]);
   });
 
   test("not found if no such job", async function () {
@@ -275,7 +275,7 @@ describe("delete", function () {
   test("works", async function () {
     await Job.remove(1);
     const res = await db.query(
-        "SELECT id FROM jobs WHERE id=1");
+      "SELECT id FROM jobs WHERE id=1");
     expect(res.rows.length).toEqual(0);
   });
 
