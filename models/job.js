@@ -79,6 +79,62 @@ class Job {
     return job;
   }
 
+  /** Function MUST be passed filters object.
+  * Finds specific jobs based on input object of filters.
+ *  Param is object with possible keys {id, title, salary, equity, company_handle}
+ * Returns [{ id, title, salary, equity, companyHandle }, ...]
+ * */
+
+     static async findFiltered(filters) {
+
+      const { whereStatement, values } = Job._whereClauseGenerator(filters);
+
+      const jobsRes = await db.query(
+          `SELECT id,
+          title,
+          salary AS "minSalary,
+          equity AS "hasEquity",
+          company_handle AS "companyHandle"
+        FROM jobs
+        WHERE ${whereStatement}
+        ORDER BY name`, values);
+
+      return jobsRes.rows;
+    }
+
+     /** Given a filters object, return an object containing the WHERE clause
+   * and filter values. This is a helper function for findFiltered.
+   *
+   * Returns { whereStatement, values }
+   *   where whereStatement is a string (ex. "name ILIKE ....")
+   *   values is an array containing filter values (ex. ["garner", 500])
+   **/
+
+  static _whereClauseGenerator(filters) {
+
+    const whereQueries = [];
+    const values = [];
+
+    if (filters.title) {
+      values.push(`%${filters.title}%`);
+      whereQueries.push(`title ILIKE $${values.length}`);
+    }
+    if (filters.minSalary) {
+      values.push(filters.minSalary);
+      whereQueries.push(`salary >= $${values.length}`);
+    }
+
+    if (filters.hasEquity === true) {
+      values.push(filters.hasEquity);
+      whereQueries.push(`equity > 0.0`);
+    }
+
+    const whereStatement = whereQueries.join(' AND ');
+
+    return { whereStatement, values };
+
+  }
+
   /** Update job data with `data`.
    *
    * This is a "partial update" --- it's fine if data doesn't contain all the
