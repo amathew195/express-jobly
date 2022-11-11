@@ -26,7 +26,7 @@ describe("POST /jobs", function () {
     "title": "newJob",
     "salary": 100000,
     "equity": 0.05,
-    "company_handle": "c1"
+    "companyHandle": "c1"
   };
 
   test("ok for admins", async function () {
@@ -145,6 +145,97 @@ describe("GET /jobs/:id", function () {
     expect(resp.statusCode).toEqual(404);
   });
 });
+
+/***************************************GET /jobs FILTERED */
+
+describe("GET /jobs FILTERED", function () {
+
+  test("working with title filter passed in", async function () {
+    const resp = await request(app)
+      .get("/jobs")
+      .query({ title: 'j1' });
+
+    expect(resp.body).toEqual({
+      jobs:
+        [
+          {
+            "id": 1,
+            "title": "j1",
+            "salary": 10000,
+            "equity": "0.05",
+            "companyHandle": "c1"
+          }
+        ],
+    });
+  });
+
+  test("working with minSalary filter passed in", async function () {
+    const resp = await request(app)
+      .get("/jobs")
+      .query({
+        minSalary: 90000,
+      });
+
+    expect(resp.body).toEqual({
+      jobs:
+        [
+          {
+            "id": 3,
+            "title": "j3",
+            "salary": 100000,
+            "equity": "0.075",
+            "companyHandle": "c2"
+          }
+        ],
+    });
+  });
+
+  test("working with hasEquity filter passed in", async function () {
+    const resp = await request(app)
+      .get("/jobs")
+      .query({
+        hasEquity: true,
+      });
+
+    expect(resp.body).toEqual({
+      jobs:
+        [
+          {
+            "id": 1,
+            "title": "j1",
+            "salary": 10000,
+            "equity": "0.05",
+            "companyHandle": "c1"
+          },
+          {
+            "id": 2,
+            "title": "j2",
+            "salary": 50000,
+            "equity": "0.025",
+            "companyHandle": "c1"
+          },
+          {
+            "id": 3,
+            "title": "j3",
+            "salary": 100000,
+            "equity": "0.075",
+            "companyHandle": "c2"
+          }
+        ],
+    });
+  });
+
+  test("throws error if minSalary is 'abc", async function () {
+    const resp = await request(app)
+      .get("/jobs")
+      .query({ minSalary: 'abc' });
+
+    expect(resp.statusCode).toEqual(400);
+  });
+
+
+});
+
 
 /************************************** PATCH /jobs/:id */
 

@@ -16,7 +16,7 @@
         "type": "number",
         "minimum": 0
       },
-      "company_handle": {
+      "companyHandle": {
         "type": "string",
         "minLength": 1,
         "maxLength": 25
@@ -25,6 +25,6 @@
     "additionalProperties": false,
     "required": [
       "title",
-      "company_handle"
+      "companyHandle"
     ]
   }
