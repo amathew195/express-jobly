@@ -20,6 +20,8 @@ afterAll(commonAfterAll);
 
 /******************************************* Create Job */
 
+//TODO: What happens if we try to create a job unsuccessfully? For a handle that doesn't exist
+
 describe("create", function () {
 
   const newJob = {
@@ -179,9 +181,14 @@ describe("findFiltered", function () {
     ]);
   });
 
+  //TODO: Move some of these tests to _whereClauseGenerator
+  // - only checking a simple string
+
 });
 
 /************************************** _whereClauseGenerator */
+
+//TODO: Write a test that this should work if we put in a 0 for min salary
 
 describe("_whereClauseGenerator", function () {
   test("works: with title and hasEquity filters", function () {

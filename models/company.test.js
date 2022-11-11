@@ -162,6 +162,8 @@ describe("_whereClauseGenerator", function () {
 
 /************************************** get */
 
+//TODO: Add a test for a company without jobs
+
 describe("get", function () {
   test("works", async function () {
     let company = await Company.get("c1");

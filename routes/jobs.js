@@ -6,7 +6,7 @@ const jsonschema = require("jsonschema");
 const express = require("express");
 
 const { BadRequestError } = require("../expressError");
-const { ensureLoggedIn, ensureIsAdmin } = require("../middleware/auth");
+const { ensureIsAdmin } = require("../middleware/auth");
 const Job = require("../models/job");
 
 const jobNewSchema = require("../schemas/jobNew.json");
@@ -55,7 +55,7 @@ const router = new express.Router();
     jobs = await Job.findAll();
   } else {
     // Convert stringified nums to nums for minSalary
-    if (!isNaN(Number(filters.minSalary))) {
+    if (!isNaN(filters.minSalary)) {
       filters.minSalary = Number(filters.minSalary);
     }
 

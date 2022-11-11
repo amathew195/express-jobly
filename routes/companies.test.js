@@ -189,6 +189,20 @@ describe("GET /companies/:handle", function () {
     expect(resp.body).toEqual({
       company: {
         handle: "c1",
+        jobs: [
+          {
+          "equity": "0.05",
+          "id": 1,
+          "salary": 10000,
+          "title": "j1"
+          },
+          {
+          "equity": "0.025",
+          "id": 2,
+          "salary": 50000,
+          "title": "j2"
+          }
+        ],
         name: "C1",
         description: "Desc1",
         numEmployees: 1,
@@ -197,11 +211,21 @@ describe("GET /companies/:handle", function () {
     });
   });
 
-  test("works for anon: company w/o jobs", async function () {
+  //TODO: test for company with no jobs
+
+  test("works for anon: company w/ jobs", async function () {
     const resp = await request(app).get(`/companies/c2`);
     expect(resp.body).toEqual({
       company: {
         handle: "c2",
+        jobs: [
+          {
+          "equity": "0.075",
+          "id": 3,
+          "salary": 100000,
+          "title": "j3",
+          }
+        ],
         name: "C2",
         description: "Desc2",
         numEmployees: 2,

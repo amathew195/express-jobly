@@ -119,6 +119,7 @@ class Job {
       values.push(`%${filters.title}%`);
       whereQueries.push(`title ILIKE $${values.length}`);
     }
+    //TODO: Before fixing this, write and run the test
     if (filters.minSalary) {
       values.push(filters.minSalary);
       whereQueries.push(`salary >= $${values.length}`);
@@ -139,9 +140,9 @@ class Job {
    * This is a "partial update" --- it's fine if data doesn't contain all the
    * fields; this only changes provided ones.
    *
-   * Data can include: {name, description, numEmployees, logoUrl}
+   * Data can include: { title, salary, equity}
    *
-   * Returns {handle, name, description, numEmployees, logoUrl}
+   * Returns { id, title, salary, equity, company_handle }
    *
    * Throws NotFoundError if not found.
    */

@@ -136,6 +136,7 @@ class Company {
    **/
 
   static async get(handle) {
+    // Query for Company
     const companyRes = await db.query(
       `SELECT handle,
                 name,
@@ -161,8 +162,6 @@ class Company {
         [handle]);
 
       company.jobs = jobs.rows;
-
-      console.log("company----------->", company)
 
     return company;
   }
