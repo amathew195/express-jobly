@@ -384,12 +384,15 @@ describe("DELETE /users/:username", function () {
   });
 });
 
-
-
 /***************************** APPLY FOR A JOB users/:username/jobs/:id */
 
-//TODO: If a user tries to apply for a job that doesn't exist
+describe("POST /users/:username/jobs/:id", function () {
+  test("works for admin", async function () {
+    const resp = await request(app)
+      .post(`/users/u1/jobs/1`)
+      .set("authorization", `Bearer ${adminToken}`);
+    expect(resp.body).toEqual({ applied: "1" });
+  });
+});
 
-//TODO: Normal edge cases regarding authorization middleware
-
-//TODO: 
+// Normal edge cases regarding authorization middleware//

@@ -215,7 +215,7 @@ describe("remove", function () {
   test("works", async function () {
     await User.remove("u1");
     const res = await db.query(
-        "SELECT * FROM users WHERE username='u1'");
+      "SELECT * FROM users WHERE username='u1'");
     expect(res.rows.length).toEqual(0);
   });
 
@@ -231,27 +231,55 @@ describe("remove", function () {
 
 /*********************************** apply for job */
 
-// TODO: User can successfully apply for a job
-// TODO: Test that user cannot apply for same job twice
-// TODO: Test user cannot apply for job that doesn't exist
-// TODO: If bad user entered, test error
-
-
 describe("apply for a job", function () {
   const newApplication = {
     username: "u1",
-    id: "c2"
+    id: "1"
   };
 
   test("works", async function () {
-    let user = await User.register({
-      ...newUser,
-      password: "password",
-    });
-    expect(user).toEqual(newUser);
-    const found = await db.query("SELECT * FROM users WHERE username = 'new'");
+    let application = await User.apply(newApplication);
+    expect(application).toEqual(
+      {
+        username: "u1",
+        jobId: 1
+      }
+      );
+    const found = await db.query(
+      `SELECT *
+      FROM applications
+      WHERE username = 'u1' AND job_id = 1`);
+
     expect(found.rows.length).toEqual(1);
-    expect(found.rows[0].is_admin).toEqual(false);
-    expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
+    expect(found.rows[0].username).toEqual("u1");
+    expect(found.rows[0].job_id).toEqual(1);
   });
+
+  test("does not work: no duplicate applications", async function () {
+    try {
+      await User.apply({username: "u2", id: 2});
+      throw new Error("fail test, you shouldn't get here");
+    } catch (err) {
+      expect(err instanceof BadRequestError).toBeTruthy();
+    }
+  });
+
+  test("does not work: job does not exist", async function () {
+    try {
+      await User.apply({username: "u2", id: 0});
+      throw new Error("fail test, you shouldn't get here");
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+
+  test("does not work: user does not exist", async function () {
+    try {
+      await User.apply({username: "user", id: 3});
+      throw new Error("fail test, you shouldn't get here");
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+
 });

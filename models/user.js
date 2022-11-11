@@ -210,13 +210,17 @@ class User {
 
   static async apply({username, id}) {
 
-    //Check if job does not exist in our db
+    //Check if job/user does not exist in our db
     const jobExists = await Job.get(id)
-    if (!jobExists) throw new NotFoundError(`No job: ${id}`);
-
-    //Check if user does not exist in our db
     const userExists = await User.get(username)
-    if (!userExists) throw new NotFoundError(`No user: ${username}`);
+
+    if (!jobExists && !userExists){
+      throw new NotFoundError(`No user: ${username}, No job: ${id}`)
+    } else if (!jobExists){
+      throw new NotFoundError(`No job: ${id}`);
+    } else if (!userExists) {
+      throw new NotFoundError(`No user: ${username}`);
+    }
 
     //Make sure user is not applying for the same job twice
     const duplicateCheck = await db.query(

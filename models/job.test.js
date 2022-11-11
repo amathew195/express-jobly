@@ -61,7 +61,6 @@ describe("create", function () {
   test("bad request with no company_handle", async function () {
 
     try {
-      console.log("I AM HERE")
       await Job.create({
       title: "new job",
       salary: 90000,
@@ -70,7 +69,6 @@ describe("create", function () {
       });
       throw new Error("fail test, you shouldn't get here");
     } catch (err) {
-      console.log(err, "<<<<<this is err")
       expect(err.code).toEqual('23503');
     }
   });

@@ -11,6 +11,8 @@ async function commonBeforeAll() {
 
   await db.query("DELETE FROM jobs");
 
+  await db.query("DELETE FROM applications");
+
   await db.query("SELECT setval('jobs_id_seq', 1, false)");
 
   await db.query(`
@@ -38,6 +40,10 @@ async function commonBeforeAll() {
       VALUES ('j1', 50000, .03, 'c1'),
              ('j2', 90000, .05, 'c1'),
              ('j3', 100000, .01, 'c2')`);
+
+  await db.query(`
+      INSERT INTO applications(username, job_id)
+      VALUES ('u2', 2)`)
 }
 
 async function commonBeforeEach() {
