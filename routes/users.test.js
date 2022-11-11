@@ -383,3 +383,13 @@ describe("DELETE /users/:username", function () {
     expect(resp.statusCode).toEqual(404);
   });
 });
+
+
+
+/***************************** APPLY FOR A JOB users/:username/jobs/:id */
+
+//TODO: If a user tries to apply for a job that doesn't exist
+
+//TODO: Normal edge cases regarding authorization middleware
+
+//TODO: 

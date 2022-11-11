@@ -10,6 +10,7 @@ const {
 } = require("../expressError");
 
 const { BCRYPT_WORK_FACTOR } = require("../config.js");
+const Job = require("./job");
 
 /** Related functions for users. */
 
@@ -171,7 +172,6 @@ class User {
         lastName: "last_name",
         isAdmin: "is_admin",
       });
-    console.log(setCols, values, "<<<<<<<<<<<");
     const usernameVarIdx = "$" + (values.length + 1);
 
     const querySql = `UPDATE users
@@ -209,6 +209,25 @@ class User {
   /** add new application to database; returns application */
 
   static async apply({username, id}) {
+
+    //Check if job does not exist in our db
+    const jobExists = await Job.get(id)
+    if (!jobExists) throw new NotFoundError(`No job: ${id}`);
+
+    //Check if user does not exist in our db
+    const userExists = await User.get(username)
+    if (!userExists) throw new NotFoundError(`No user: ${username}`);
+
+    //Make sure user is not applying for the same job twice
+    const duplicateCheck = await db.query(
+      `SELECT username, job_id
+           FROM applications
+           WHERE username = $1 AND job_id = $2`,
+      [username, id],
+    );
+    if (duplicateCheck.rows[0]) {
+      throw new BadRequestError(`Duplicate job for user ${username}`);
+    }
 
     const result = await db.query(
       `INSERT INTO applications

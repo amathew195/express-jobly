@@ -228,3 +228,30 @@ describe("remove", function () {
     }
   });
 });
+
+/*********************************** apply for job */
+
+// TODO: User can successfully apply for a job
+// TODO: Test that user cannot apply for same job twice
+// TODO: Test user cannot apply for job that doesn't exist
+// TODO: If bad user entered, test error
+
+
+describe("apply for a job", function () {
+  const newApplication = {
+    username: "u1",
+    id: "c2"
+  };
+
+  test("works", async function () {
+    let user = await User.register({
+      ...newUser,
+      password: "password",
+    });
+    expect(user).toEqual(newUser);
+    const found = await db.query("SELECT * FROM users WHERE username = 'new'");
+    expect(found.rows.length).toEqual(1);
+    expect(found.rows[0].is_admin).toEqual(false);
+    expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
+  });
+});
