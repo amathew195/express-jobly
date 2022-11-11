@@ -15,7 +15,7 @@ class Job {
    *
    * */
 
-   static async create({ title, salary, equity, companyHandle }) {
+   static async create({ title, salary, equity, company_handle }) {
 
     const result = await db.query(
       `INSERT INTO jobs(
@@ -30,7 +30,7 @@ class Job {
         title,
         salary,
         equity,
-        companyHandle
+        company_handle
       ],
     );
     const job = result.rows[0];
@@ -128,7 +128,6 @@ class Job {
 
       if (!job) throw new NotFoundError(`No job: ${id}`);
     }
-
 }
 
 module.exports = Job;

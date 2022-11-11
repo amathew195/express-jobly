@@ -197,7 +197,6 @@ describe("update", function () {
   });
 });
 
-
 /******************************************* Delete a Job */
 
 describe("delete", function () {
