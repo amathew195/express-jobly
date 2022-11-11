@@ -211,25 +211,16 @@ describe("GET /companies/:handle", function () {
     });
   });
 
-  //TODO: test for company with no jobs
-
-  test("works for anon: company w/ jobs", async function () {
-    const resp = await request(app).get(`/companies/c2`);
+  test("works for anon: company w/ 0 jobs", async function () {
+    const resp = await request(app).get(`/companies/c3`);
     expect(resp.body).toEqual({
       company: {
-        handle: "c2",
-        jobs: [
-          {
-          "equity": "0.075",
-          "id": 3,
-          "salary": 100000,
-          "title": "j3",
-          }
-        ],
-        name: "C2",
-        description: "Desc2",
-        numEmployees: 2,
-        logoUrl: "http://c2.img",
+        handle: "c3",
+        jobs: [],
+        name: "C3",
+        description: "Desc3",
+        numEmployees: 3,
+        logoUrl: "http://c3.img",
       },
     });
   });

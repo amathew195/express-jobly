@@ -119,8 +119,8 @@ class Job {
       values.push(`%${filters.title}%`);
       whereQueries.push(`title ILIKE $${values.length}`);
     }
-    //TODO: Before fixing this, write and run the test
-    if (filters.minSalary) {
+
+    if (filters.minSalary !== undefined) {
       values.push(filters.minSalary);
       whereQueries.push(`salary >= $${values.length}`);
     }

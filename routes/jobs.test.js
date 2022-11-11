@@ -114,29 +114,6 @@ describe("GET /jobs", function () {
 
 });
 
-/************************************** GET /jobs/:id */
-//TODO: Move below the GET /jobs FILTERED
-
-describe("GET /jobs/:id", function () {
-  test("works for anon", async function () {
-    const resp = await request(app).get(`/jobs/1`);
-    expect(resp.body).toEqual({
-      job: {
-        "id": 1,
-        "title": "j1",
-        "salary": 10000,
-        "equity": "0.05",
-        "companyHandle": "c1"
-      },
-    });
-  });
-
-  test("not found for no such job", async function () {
-    const resp = await request(app).get(`/jobs/0`);
-    expect(resp.statusCode).toEqual(404);
-  });
-});
-
 /***************************************GET /jobs FILTERED */
 
 describe("GET /jobs FILTERED", function () {
@@ -225,6 +202,28 @@ describe("GET /jobs FILTERED", function () {
   });
 
 
+});
+
+/************************************** GET /jobs/:id */
+
+describe("GET /jobs/:id", function () {
+  test("works for anon", async function () {
+    const resp = await request(app).get(`/jobs/1`);
+    expect(resp.body).toEqual({
+      job: {
+        "id": 1,
+        "title": "j1",
+        "salary": 10000,
+        "equity": "0.05",
+        "companyHandle": "c1"
+      },
+    });
+  });
+
+  test("not found for no such job", async function () {
+    const resp = await request(app).get(`/jobs/0`);
+    expect(resp.statusCode).toEqual(404);
+  });
 });
 
 

@@ -55,10 +55,25 @@ describe("create", function () {
         equity: '0.05',
         company_handle: 'c1'
       }
-
     ]);
   });
 
+  test("bad request with no company_handle", async function () {
+
+    try {
+      console.log("I AM HERE")
+      await Job.create({
+      title: "new job",
+      salary: 90000,
+      equity: 0.05,
+      companyHandle: 'c0'
+      });
+      throw new Error("fail test, you shouldn't get here");
+    } catch (err) {
+      console.log(err, "<<<<<this is err")
+      expect(err.code).toEqual('23503');
+    }
+  });
 });
 
 /******************************************* Get All Jobs */
@@ -135,60 +150,11 @@ describe("findFiltered", function () {
     ]);
   });
 
-  test("works: with minSalary filter", async function () {
-    let jobs = await Job.findFiltered({
-      minSalary: 91000
-    });
 
-    expect(jobs).toEqual([
-      {
-        id: 3,
-        title: "j3",
-        salary: 100000,
-        equity: "0.01",
-        companyHandle: "c2",
-      }
-    ]);
-  });
-
-  test("works: with equity filter", async function () {
-    let jobs = await Job.findFiltered({
-      hasEquity: true
-    });
-
-    expect(jobs).toEqual([
-      {
-        id: 1,
-        title: "j1",
-        salary: 50000,
-        equity: "0.03",
-        companyHandle: "c1",
-      },
-      {
-        id: 2,
-        title: "j2",
-        salary: 90000,
-        equity: "0.05",
-        companyHandle: "c1",
-      },
-      {
-        id: 3,
-        title: "j3",
-        salary: 100000,
-        equity: "0.01",
-        companyHandle: "c2",
-      }
-    ]);
-  });
-
-  //TODO: Move some of these tests to _whereClauseGenerator
-  // - only checking a simple string
 
 });
 
 /************************************** _whereClauseGenerator */
-
-//TODO: Write a test that this should work if we put in a 0 for min salary
 
 describe("_whereClauseGenerator", function () {
   test("works: with title and hasEquity filters", function () {
@@ -198,6 +164,31 @@ describe("_whereClauseGenerator", function () {
     });
     expect(results.whereStatement).toEqual(`title ILIKE $1 AND equity > 0.0`);
     expect(results.values).toEqual(["%j1%"])
+  });
+
+  test("works: with title and minSalary filters", function () {
+    let results = Job._whereClauseGenerator({
+      title: 'j1',
+      minSalary: 50000,
+    });
+    expect(results.whereStatement).toEqual(`title ILIKE $1 AND salary >= $2`);
+    expect(results.values).toEqual(["%j1%", 50000])
+  });
+
+  test("works: with minSalary filters", function () {
+    let results = Job._whereClauseGenerator({
+      minSalary: 50000,
+    });
+    expect(results.whereStatement).toEqual(`salary >= $1`);
+    expect(results.values).toEqual([50000])
+  });
+
+  test("works: with minSalary 0", function () {
+    let results = Job._whereClauseGenerator({
+      minSalary: 0,
+    });
+    expect(results.whereStatement).toEqual(`salary >= $1`);
+    expect(results.values).toEqual([0])
   });
 })
 
