@@ -166,12 +166,20 @@ describe("get", function () {
   test("works", async function () {
     let company = await Company.get("c1");
     expect(company).toEqual({
-      handle: "c1",
-      name: "C1",
-      description: "Desc1",
-      numEmployees: 1,
-      logoUrl: "http://c1.img",
-    });
+      "description": "Desc1",
+      "handle": "c1",
+      "jobs":
+        [{"equity": "0.03",
+        "id": 1,
+        "salary": 50000,
+        "title": "j1"},
+        {"equity": "0.05",
+        "id": 2,
+        "salary": 90000,
+        "title": "j2"}],
+      "logoUrl": "http://c1.img",
+      "name": "C1",
+      "numEmployees": 1});
   });
 
   test("not found if no such company", async function () {
