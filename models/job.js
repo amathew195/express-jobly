@@ -15,7 +15,7 @@ class Job {
    *
    * */
 
-   static async create({ title, salary, equity, company_handle }) {
+   static async create({ title, salary, equity, companyHandle }) {
 
     const result = await db.query(
       `INSERT INTO jobs(
@@ -30,7 +30,7 @@ class Job {
         title,
         salary,
         equity,
-        company_handle
+        companyHandle
       ],
     );
     const job = result.rows[0];
@@ -92,8 +92,8 @@ class Job {
       const jobsRes = await db.query(
           `SELECT id,
           title,
-          salary AS "minSalary",
-          equity AS "hasEquity",
+          salary,
+          equity,
           company_handle AS "companyHandle"
         FROM jobs
         WHERE ${whereStatement}

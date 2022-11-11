@@ -49,7 +49,7 @@ const router = new express.Router();
  router.get("/", async function (req, res, next) {
   const filters = req.query;
   let jobs;
-  console.log(req.query, "<<<<<<req.query")
+
   // if no query strings are passed in, call findAll()
   if (Object.keys(filters).length === 0) {
     jobs = await Job.findAll();
@@ -63,7 +63,6 @@ const router = new express.Router();
       filters.hasEquity = true;
     }
 
-    console.log(filters, "<<<<<<filters")
 
     //Validate query strings against schema
     const validator = jsonschema.validate(
