@@ -93,8 +93,41 @@ const router = new express.Router();
   return res.json({ job });
 });
 
+/** PATCH /[id] { fld1, fld2, ... } => { job }
+ *
+ * Patches job data.
+ *
+ * fields can be: { title, salary, equity }
+ *
+ * Returns {  id, title, salary, equity, company_handle }
+ *
+ * Authorization required: must be logged in and an admin
+ */
 
+ router.patch("/:id", ensureIsAdmin, async function (req, res, next) {
+  const validator = jsonschema.validate(
+    req.body,
+    jobUpdateSchema,
+    { required: true }
+  );
+  if (!validator.valid) {
+    const errs = validator.errors.map(e => e.stack);
+    throw new BadRequestError(errs);
+  }
 
+  const job = await Job.update(req.params.id, req.body);
+  return res.json({ job });
+});
+
+/** DELETE /[id]  =>  { deleted: id }
+ *
+ * Authorization: must be logged in and an admin
+ */
+
+ router.delete("/:id", ensureIsAdmin, async function (req, res, next) {
+  await Job.remove(req.params.id);
+  return res.json({ deleted: req.params.id });
+});
 
 
 
