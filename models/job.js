@@ -92,12 +92,12 @@ class Job {
       const jobsRes = await db.query(
           `SELECT id,
           title,
-          salary AS "minSalary,
+          salary AS "minSalary",
           equity AS "hasEquity",
           company_handle AS "companyHandle"
         FROM jobs
         WHERE ${whereStatement}
-        ORDER BY name`, values);
+        ORDER BY id`, values);
 
       return jobsRes.rows;
     }
@@ -125,7 +125,6 @@ class Job {
     }
 
     if (filters.hasEquity === true) {
-      values.push(filters.hasEquity);
       whereQueries.push(`equity > 0.0`);
     }
 

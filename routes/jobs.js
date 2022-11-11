@@ -11,7 +11,7 @@ const Job = require("../models/job");
 
 const jobNewSchema = require("../schemas/jobNew.json");
 const jobUpdateSchema = require("../schemas/jobUpdate.json");
-// const jobFilterSchema = require("../schemas/jobFilter.json");
+const jobFilterSchema = require("../schemas/jobFilter.json");
 
 const router = new express.Router();
 
@@ -47,38 +47,40 @@ const router = new express.Router();
  */
 
  router.get("/", async function (req, res, next) {
-  // const filters = req.query;
-  let jobs = await Job.findAll();
+  const filters = req.query;
+  let jobs;
+  console.log(req.query, "<<<<<<req.query")
+  // if no query strings are passed in, call findAll()
+  if (Object.keys(filters).length === 0) {
+    jobs = await Job.findAll();
+  } else {
+    // Convert stringified nums to nums for minSalary
+    if (!isNaN(Number(filters.minSalary))) {
+      filters.minSalary = Number(filters.minSalary);
+    }
 
-  // // if no query strings are passed in, call findAll()
-  // if (Object.keys(filters).length === 0) {
-  // } else {
-  //   // Convert stringified nums to nums for maxEmployees and minEmployees
-  //   if (!isNaN(Number(filters.maxEmployees))) {
-  //     filters.maxEmployees = Number(filters.maxEmployees);
-  //   }
+    if (filters.hasEquity === "true") {
+      filters.hasEquity = true;
+    }
 
-  //   if (!isNaN(Number(filters.minEmployees))) {
-  //     filters.minEmployees = Number(filters.minEmployees);
-  //   }
+    console.log(filters, "<<<<<<filters")
 
-    // Validate query strings against schema
-    // const validator = jsonschema.validate(
-    //   filters,
-    //   jobsFilterSchema,
-    //   { required: true }
-    // );
-    // if (!validator.valid) {
-    //   const errs = validator.errors.map(e => e.stack);
-    //   throw new BadRequestError(errs);
-    // }
+    //Validate query strings against schema
+    const validator = jsonschema.validate(
+      filters,
+      jobFilterSchema,
+      { required: true }
+    );
+    if (!validator.valid) {
+      const errs = validator.errors.map(e => e.stack);
+      throw new BadRequestError(errs);
+    }
 
-    // pass in query object to findFiltered()
-    // jobs = await Jobs.findFiltered(filters);
-  // }
+    //pass in query object to findFiltered()
+    jobs = await Job.findFiltered(filters);
+  }
 
     return res.json({ jobs });
-
 });
 
 /** GET /[id]  =>  { job }
