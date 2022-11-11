@@ -107,6 +107,7 @@ router.delete("/:username", ensureIsCorrectUserOrAdmin, async function (req, res
   return res.json({ deleted: req.params.username });
 });
 
+
 /** POST /[username]/jobs/[id]  =>  { applied: id }
  *
  * Allows user to apply for job, and updates database

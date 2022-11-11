@@ -387,12 +387,65 @@ describe("DELETE /users/:username", function () {
 /***************************** APPLY FOR A JOB users/:username/jobs/:id */
 
 describe("POST /users/:username/jobs/:id", function () {
+
   test("works for admin", async function () {
     const resp = await request(app)
       .post(`/users/u1/jobs/1`)
       .set("authorization", `Bearer ${adminToken}`);
     expect(resp.body).toEqual({ applied: "1" });
   });
+
+  test("works for current user", async function () {
+    const resp = await request(app)
+      .post(`/users/u1/jobs/2`)
+      .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.body).toEqual({ applied: "2" });
+  });
+
+  test("Fail: unauthorized user and not admin", async function () {
+    const resp = await request(app)
+      .post(`/users/u2/jobs/2`)
+      .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.statusCode).toEqual(401);
+  });
+
+  test("Fail: error if anon/not logged in", async function () {
+    const resp = await request(app)
+      .post(`/users/u2/jobs/2`)
+    expect(resp.statusCode).toEqual(401);
+  });
+
+  test("Fail: error if user missing", async function () {
+    const resp = await request(app)
+      .post(`/users/jobs/2`)
+      .set("authorization", `Bearer ${adminToken}`);
+    expect(resp.statusCode).toEqual(404);
+  });
+
+  test("Fail: error if job missing", async function () {
+    const resp = await request(app)
+    .post(`/users/u1/jobs`)
+      .set("authorization", `Bearer ${adminToken}`);
+    expect(resp.statusCode).toEqual(404);
+  });
+
+  test("Fail: error if user doesn't exist", async function () {
+    const resp = await request(app)
+    .post(`/users/nope/jobs/2`)
+      .set("authorization", `Bearer ${adminToken}`);
+    expect(resp.statusCode).toEqual(404);
+  });
+
+  test("Fail: error if job doesn't exist", async function () {
+    const resp = await request(app)
+    .post(`/users/u1/jobs/0`)
+      .set("authorization", `Bearer ${adminToken}`);
+    expect(resp.statusCode).toEqual(404);
+  });
+
+
+
 });
 
-// Normal edge cases regarding authorization middleware//
+
+
