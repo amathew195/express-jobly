@@ -20,8 +20,6 @@ afterAll(commonAfterAll);
 
 /******************************************* Create Job */
 
-//TODO: What happens if we try to create a job unsuccessfully? For a handle that doesn't exist
-
 describe("create", function () {
 
   const newJob = {

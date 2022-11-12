@@ -162,10 +162,8 @@ describe("_whereClauseGenerator", function () {
 
 /************************************** get */
 
-//TODO: Add a test for a company without jobs
-
 describe("get", function () {
-  test("works", async function () {
+  test("works: company with jobs", async function () {
     let company = await Company.get("c1");
     expect(company).toEqual({
       "description": "Desc1",
@@ -183,6 +181,20 @@ describe("get", function () {
       "name": "C1",
       "numEmployees": 1});
   });
+
+  test("works: company with no jobs", async function () {
+    let company = await Company.get("c3");
+    expect(company).toEqual({
+      "description": "Desc3",
+      "handle": "c3",
+      "jobs":
+        [],
+      "logoUrl": "http://c3.img",
+      "name": "C3",
+      "numEmployees": 3});
+  });
+
+
 
   test("not found if no such company", async function () {
     try {

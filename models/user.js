@@ -217,8 +217,11 @@ class User {
     if (!user) throw new NotFoundError(`No user: ${username}`);
   }
 
-  /** add new application to database; returns application */
-  // TODO: ADD WHAT IT ACCEPTS AND RETURNS
+  /** add new application to database; returns application
+   * Receives san object containing username and job id.
+   * returns application which is an object that includes username and job id
+  */
+
 
   static async apply({username, id}) {
 

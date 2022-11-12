@@ -427,6 +427,13 @@ describe("POST /users/:username/jobs/:id", function () {
     expect(resp.statusCode).toEqual(401);
   });
 
+  test("Fail: unauthorized requester and job doesn't exist", async function () {
+    const resp = await request(app)
+      .post(`/users/u2/jobs/0`)
+      .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.statusCode).toEqual(401);
+  });
+
   test("Fail: error if anon/not logged in", async function () {
     const resp = await request(app)
       .post(`/users/u2/jobs/2`)
@@ -461,7 +468,6 @@ describe("POST /users/:username/jobs/:id", function () {
     expect(resp.statusCode).toEqual(404);
   });
 
-  //TODO: NOT AUTHORIZED AND JOB DOESN'T EXIST TEST
 
 });
 
