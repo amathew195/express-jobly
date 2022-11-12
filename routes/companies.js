@@ -60,11 +60,11 @@ router.get("/", async function (req, res, next) {
     companies = await Company.findAll();
   } else {
     // Convert stringified nums to nums for maxEmployees and minEmployees
-    if (!isNaN(Number(filters.maxEmployees))) {
+    if (!isNaN(filters.maxEmployees)) {
       filters.maxEmployees = Number(filters.maxEmployees);
     }
 
-    if (!isNaN(Number(filters.minEmployees))) {
+    if (!isNaN(filters.minEmployees)) {
       filters.minEmployees = Number(filters.minEmployees);
     }
 
@@ -98,7 +98,7 @@ router.get("/", async function (req, res, next) {
 
 router.get("/:handle", async function (req, res, next) {
   const company = await Company.get(req.params.handle);
-  
+
   return res.json({ company });
 });
 
