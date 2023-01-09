@@ -2,7 +2,16 @@
 
 Jobly is a full stack web application of a mock job board site where users can create an account and login. Logged in users can browse through a list of companies and/or jobs with the ability to filter the list using the search bar. Each company has a list of job openings that a user can view and/or apply to. 
 
-## Features:
+# Table of Contents
+1. [Features](#Features)
+2. [Tech stack](#Tech-stack)
+3. [Database Entity Relationships](#Database-entity-relationships)
+4. [Install](#Install)
+5. [Testing](#Testing)
+6. [Deployment](#Deployment)
+7. [Future features](#Future-features)
+
+## Features<a name="Features"></a>:
 * Utilizes RESTful API
 * Users must create an account to access the application. A valid email is not required, but passwords are hashed and authenticated using bcrypt. 
 * Proper authorization checks are in place to ensure admin position can complete additional activities (ex. creating, updating, and deleting companies) and regular users cannot.  
@@ -11,7 +20,7 @@ Jobly is a full stack web application of a mock job board site where users can c
 * Users can update their profile, but cannot change their username. Their valid password is needed to update the profile.
 * Getting information on a user, updating, or deleting a user is only permitted by either an admin, or by that user.
 
-## Tech stack: 
+## Tech stack<a name="Tech-stack"></a>: 
 
 ### Backend:
 ![alt text](https://img.shields.io/badge/-Express-000000?logo=express&logoColor=white&style=for-the-badge)
@@ -23,10 +32,10 @@ Jobly is a full stack web application of a mock job board site where users can c
 ### Database Management: 
 ![alt text](https://img.shields.io/badge/-PostgresSQL-4169E1?logo=postgresql&logoColor=white&style=for-the-badge)
 
-## Database Entity Relationships: 
+## Database Entity Relationships<a name="Database-entity-relationships"></a>: 
 ![alt text](https://github.com/amathew195/express-jobly/blob/main/images/Jobly%20-%20Entity%20Relationship%20Diagram%20-%20Cropped.jpeg?raw=true)
 
-## Install: 
+## Install<a name="Install"></a>: 
 To set up and load the database: 
 
     createdb jobly < jobly.sql
@@ -39,14 +48,39 @@ To start the sever (port 3001):
 
     npm start
 
-## Testing:
+## Testing<a name="Testing"></a>:
 To run the tests:
 
     jest -i
     
 Note: Any time you run our tests here, you will need to use the -i flag for Jest, so that the tests run “in band” (in order, not at the same time)
 
-## Future Features:
+### Coverage Report: 
+![alt text](https://github.com/amathew195/express-jobly/blob/main/images/Jobly%20Test%20Coverage.jpg?raw=true)
+
+## Deployment<a name="Deployment"></a>:
+### Backend Deployment: 
+We used ElephantSQL and Render to deploy our backend.
+
+In ElephantSQL, create a 'Tiny Turtle' instance and copy the URL to your new instance.
+
+Seed your database: 
+
+    pg_dump -O jobly | psql (url you copied here)
+
+In Render, create a new instance of “Web service”. 
+
+Connect to your repository and give your instance a name, which must be globally unique.
+
+Choose advanced, and enter environmental variables:
+
+    DATABASE_URL: URL from ElephantSQL
+    
+    SECRET_KEY: anything you want
+    
+Lastly select 'Create Web Service'
+
+## Future features<a name="Future-features"></a>:
 * Dynamic live search
 * Add additional search filters to search by number of employees, industry, position
 * Have job application forms available for the user to submit
