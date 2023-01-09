@@ -18,7 +18,7 @@ Jobly is a full stack web application of a mock job board site where users can c
 * Proper authorization checks are in place to ensure admin position can complete additional activities (ex. creating, updating, and deleting companies) and regular users cannot.  
 * Users can browse through library of companies and/or jobs with the option to filter using the search bar. 
 * "Apply" feature allows users to keep track of which jobs they have already applied for. 
-* Users can update their profile, but cannot change their username. Their valid password is needed to update the profile.
+* Users can update their profile, but cannot change their username. 
 * Getting information on a user, updating, or deleting a user is only permitted by either an admin, or by that user.
 
 ## Tech stack<a name="Tech-stack"></a>: 
