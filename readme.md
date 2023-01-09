@@ -10,6 +10,7 @@ Jobly is a full stack web application of a mock job board site where users can c
 5. [Testing](#Testing)
 6. [Deployment](#Deployment)
 7. [Future features](#Future-features)
+8. [Contributers](#Contributers)
 
 ## Features<a name="Features"></a>:
 * Utilizes RESTful API
@@ -86,3 +87,8 @@ Lastly select 'Create Web Service'
 * Have job application forms available for the user to submit
 * Allow users to upload resume
 * Allow status updates for job. For example, ‘interested’, ‘applied’, ‘accepted’, ‘rejected’
+
+
+## Contributers<a name="Contributers"></a>:
+* Ashley Mathew
+* Jen Reuting
