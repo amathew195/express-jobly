@@ -12,6 +12,13 @@ Jobly is a full stack web application of a mock job board site where users can s
 ### Database Management: 
 ![alt text](https://img.shields.io/badge/-PostgresSQL-4169E1?logo=postgresql&logoColor=white&style=for-the-badge)
 
+### Database Entity Relationships: 
+ 
+
+
+
+
+
 
 To run this:
 
