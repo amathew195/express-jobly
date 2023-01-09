@@ -463,7 +463,7 @@ describe("POST /users/:username/jobs/:id", function () {
 
   test("Fail: error if job doesn't exist", async function () {
     const resp = await request(app)
-    .post(`/users/u1/jobs/0`)
+    .post(`/users/u1/jobs/10000000`)
       .set("authorization", `Bearer ${adminToken}`);
     expect(resp.statusCode).toEqual(404);
   });
