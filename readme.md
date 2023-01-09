@@ -62,7 +62,7 @@ Note: Any time you run our tests here, you will need to use the -i flag for Jest
 ### Backend Deployment: 
 We used ElephantSQL and Render to deploy our backend.
 
-In ElephantSQL, create a 'Tiny Turtle' instance and copy the URL to your new instance.
+In ElephantSQL, create a 'Tiny Turtle' instance and copy the URL of your new instance.
 
 Seed your database: 
 
